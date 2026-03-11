@@ -6,6 +6,7 @@ import { Geist, Amiri_Quran } from "next/font/google";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/theme-provider";
 import { BottomNav } from "~/components/bottom-nav";
+import { FontSizeProvider } from "~/components/font-size-provider";
 
 export const metadata: Metadata = {
   title: "Muslim Pro — Al-Quran, Jadwal Sholat, Kiblat",
@@ -47,8 +48,10 @@ export default function RootLayout({
       <body className="min-h-screen pb-16">
         <ThemeProvider>
           <TRPCReactProvider>
-            {children}
-            <BottomNav />
+            <FontSizeProvider>
+              {children}
+              <BottomNav />
+            </FontSizeProvider>
           </TRPCReactProvider>
         </ThemeProvider>
       </body>

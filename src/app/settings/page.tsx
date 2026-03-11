@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft, BookOpen, ChevronRight, Globe, Languages, Type, Bell, Info } from "lucide-react";
 import { ThemeToggle } from "~/components/theme-toggle";
+import { FontSizeSelector } from "~/components/font-size-selector";
 
 export default function SettingsPage() {
   return (
@@ -32,12 +33,11 @@ export default function SettingsPage() {
           <h2 className="mb-3 text-sm font-medium text-muted-foreground uppercase tracking-wide">
             Quran
           </h2>
-          <div className="divide-y divide-border rounded-xl border border-border bg-card">
-            <SettingsRow
-              icon={<Type className="size-5" />}
-              label="Font Size"
-              value="Medium"
-            />
+          <h3 className="mb-2 text-xs text-muted-foreground flex items-center gap-1.5">
+            <Type className="size-4" /> Font Size
+          </h3>
+          <FontSizeSelector />
+          <div className="mt-3 divide-y divide-border rounded-xl border border-border bg-card">
             <SettingsRow
               icon={<Languages className="size-5" />}
               label="Translation"

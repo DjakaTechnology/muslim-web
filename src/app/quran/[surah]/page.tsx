@@ -3,10 +3,10 @@ import { notFound } from "next/navigation";
 import {
   fetchSurahDetail,
   fetchSurahAyahs,
-  type AyahData,
 } from "~/lib/quran-api";
 import { ReadingTracker } from "~/components/reading-tracker";
 import { SurahStickyHeader } from "~/components/surah-sticky-header";
+import { AyahList } from "~/components/ayah-list";
 
 export const revalidate = 86400;
 
@@ -14,60 +14,6 @@ export async function generateStaticParams() {
   return Array.from({ length: 114 }, (_, i) => ({
     surah: String(i + 1),
   }));
-}
-
-function stripHtmlTags(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
-
-function stripAyahNumbers(html: string): string {
-  // Remove all forms of ayah end markers:
-  // 1. With ornate parentheses: ﴿١﴾ ﴿٢٣﴾
-  // 2. With end-of-ayah sign: ۝١٢
-  // 3. Bare Arabic-Indic digits at end of text: ٨٨
-  // 4. Same patterns wrapped in HTML tags
-  return html
-    .replace(/<[^>]*>[\uFD3E\u06DD]?[\u0660-\u0669\u06F0-\u06F9]+[\uFD3F]?<\/[^>]*>/g, "")
-    .replace(/\s*[\uFD3E\u06DD][\u0660-\u0669\u06F0-\u06F9]+[\uFD3F]?\s*/g, "")
-    .replace(/\s+[\u0660-\u0669\u06F0-\u06F9]+\s*$/g, "")
-    .replace(/\s+[\u0660-\u0669\u06F0-\u06F9]+(\s*<)/g, "$1");
-}
-
-function AyahCard({ ayah }: { ayah: AyahData }) {
-  return (
-    <div id={`ayah-${ayah.verseNumber}`} className="group py-5 transition-colors duration-700 data-[last-read=true]:rounded-xl data-[last-read=true]:bg-primary/10 data-[last-read=true]:ring-2 data-[last-read=true]:ring-primary/30 data-[last-read=true]:px-2">
-      <div className="flex gap-3">
-        {/* Ayah number badge */}
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
-          {ayah.verseNumber}
-        </div>
-
-        <div className="min-w-0 flex-1 space-y-3">
-          {/* Arabic text with tajweed — RTL, large */}
-          <p
-            className="text-right font-quran text-2xl leading-[2.2] sm:text-3xl"
-            dir="rtl"
-            dangerouslySetInnerHTML={{
-              __html: stripAyahNumbers(ayah.textUthmaniTajweed),
-            }}
-          />
-
-          {/* Latin transliteration — green accent */}
-          <p className="text-sm leading-relaxed text-primary/80 italic">
-            {stripHtmlTags(ayah.transliteration)}
-          </p>
-
-          {/* Indonesian translation — muted */}
-          <p
-            className="text-sm leading-relaxed text-muted-foreground"
-            dangerouslySetInnerHTML={{
-              __html: ayah.translation,
-            }}
-          />
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default async function SurahPage({
@@ -166,11 +112,7 @@ export default async function SurahPage({
       )}
 
       {/* Ayahs */}
-      <div className="divide-y divide-border">
-        {ayahs.map((ayah) => (
-          <AyahCard key={ayah.verseKey} ayah={ayah} />
-        ))}
-      </div>
+      <AyahList ayahs={ayahs} />
 
       {/* Prev/Next surah navigation */}
       <div className="mt-8 flex items-center justify-between gap-4">

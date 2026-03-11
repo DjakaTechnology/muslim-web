@@ -20,9 +20,16 @@ function stripHtmlTags(html: string): string {
 }
 
 function stripAyahNumbers(html: string): string {
-  // Remove ayah end markers like ﴿١﴾ ﴿٢٣﴾ etc. (Arabic-Indic digits inside ornate parentheses)
-  return html.replace(/\s*[\uFD3E\u06DD][\u0660-\u0669\u06F0-\u06F9]+[\uFD3F]?\s*/g, "")
-    .replace(/\s*<[^>]*>[\uFD3E\u06DD][\u0660-\u0669\u06F0-\u06F9]+[\uFD3F]?<\/[^>]*>\s*/g, "");
+  // Remove all forms of ayah end markers:
+  // 1. With ornate parentheses: ﴿١﴾ ﴿٢٣﴾
+  // 2. With end-of-ayah sign: ۝١٢
+  // 3. Bare Arabic-Indic digits at end of text: ٨٨
+  // 4. Same patterns wrapped in HTML tags
+  return html
+    .replace(/<[^>]*>[\uFD3E\u06DD]?[\u0660-\u0669\u06F0-\u06F9]+[\uFD3F]?<\/[^>]*>/g, "")
+    .replace(/\s*[\uFD3E\u06DD][\u0660-\u0669\u06F0-\u06F9]+[\uFD3F]?\s*/g, "")
+    .replace(/\s+[\u0660-\u0669\u06F0-\u06F9]+\s*$/g, "")
+    .replace(/\s+[\u0660-\u0669\u06F0-\u06F9]+(\s*<)/g, "$1");
 }
 
 function AyahCard({ ayah }: { ayah: AyahData }) {

@@ -5,6 +5,7 @@ import {
   fetchSurahAyahs,
   type AyahData,
 } from "~/lib/quran-api";
+import { ReadingTracker } from "~/components/reading-tracker";
 
 export const revalidate = 86400;
 
@@ -76,6 +77,8 @@ export default async function SurahPage({
 
   return (
     <main className="mx-auto max-w-2xl px-4 pb-20 pt-4">
+      <ReadingTracker surahId={surahId} />
+
       {/* Back button */}
       <Link
         href="/quran"

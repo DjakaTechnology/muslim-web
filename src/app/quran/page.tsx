@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { fetchSurahList } from "~/lib/quran-api";
 import { Badge } from "~/components/ui/badge";
+import { ContinueReading, LastReadBadge } from "~/components/continue-reading";
 
 export const revalidate = 86400; // revalidate daily
 
@@ -15,6 +16,10 @@ export default async function QuranPage() {
           114 Surah — Baca dengan tajweed & terjemahan
         </p>
       </header>
+
+      <ContinueReading
+        surahs={surahs.map((s) => ({ id: s.id, name_simple: s.name_simple }))}
+      />
 
       <div className="flex flex-col gap-2">
         {surahs.map((surah) => (
@@ -40,9 +45,12 @@ export default async function QuranPage() {
                       : "Madinah"}
                   </Badge>
                 </div>
-                <span className="text-xs text-muted-foreground">
-                  {surah.translated_name.name} — {surah.verses_count} Ayat
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground">
+                    {surah.translated_name.name} — {surah.verses_count} Ayat
+                  </span>
+                  <LastReadBadge surahId={surah.id} />
+                </div>
               </div>
 
               {/* Arabic name */}

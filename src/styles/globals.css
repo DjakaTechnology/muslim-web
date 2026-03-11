@@ -212,3 +212,15 @@
 [class^="tajweed_"] {
   font-weight: inherit;
 }
+
+/* Verse Numbers — Hidden by Default, Shown with show-verse-numbers Class */
+span.end {
+  display: none;
+}
+
+.show-verse-numbers span.end {
+  display: inline;
+  color: var(--primary);
+  opacity: 0.6;
+  margin: 0 0.25rem;
+}

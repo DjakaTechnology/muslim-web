@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { cn } from "~/lib/utils";
+import { getLastRead } from "~/lib/reading-store";
 
 const navItems = [
   {
@@ -112,6 +114,27 @@ const navItems = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [lastReadSurah, setLastReadSurah] = useState<number | null>(null);
+
+  useEffect(() => {
+    getLastRead().then((state) => {
+      if (state) setLastReadSurah(state.surahId);
+    }).catch(() => { /* IndexedDB unavailable */ });
+  }, [pathname]); // re-check when navigating
+
+  const handleQuranClick = useCallback(
+    (e: React.MouseEvent) => {
+      // If already on surah list, don't redirect
+      if (pathname === "/quran") return;
+      // If we have a last-read surah, go there instead of the list
+      if (lastReadSurah) {
+        e.preventDefault();
+        router.push(`/quran/${lastReadSurah}`);
+      }
+    },
+    [pathname, lastReadSurah, router],
+  );
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
@@ -131,6 +154,7 @@ export function BottomNav() {
             <Link
               key={item.href}
               href={isDisabled ? "#" : item.href}
+              onClick={item.href === "/quran" ? handleQuranClick : undefined}
               className={cn(
                 "flex flex-col items-center gap-0.5 px-3 py-2 text-xs transition-colors",
                 isActive

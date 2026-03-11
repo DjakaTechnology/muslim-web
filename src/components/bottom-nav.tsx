@@ -124,6 +124,7 @@ export function BottomNav() {
           const isDisabled =
             item.href !== "/" &&
             item.href !== "/quran" &&
+            item.href !== "/settings" &&
             !pathname.startsWith(item.href);
 
           return (

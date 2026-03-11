@@ -18,7 +18,7 @@ function AyahCard({ ayah, arabicClass, latinClass, showVerseNumbers }: { ayah: A
   return (
     <div
       id={`ayah-${ayah.verseNumber}`}
-      className={`group rounded-xl px-2 py-5 transition-colors duration-700 ring-2 ring-transparent data-[last-read=true]:bg-primary/10 data-[last-read=true]:ring-primary/30 ${
+      className={`group relative py-5 ${
         showVerseNumbers ? "show-verse-numbers" : ""
       }`}
     >

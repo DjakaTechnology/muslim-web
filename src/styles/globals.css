@@ -213,6 +213,27 @@
   font-weight: inherit;
 }
 
+/* Last-read ayah highlight — uses pseudo-element to avoid layout shift */
+[data-last-read="true"] {
+  position: relative;
+}
+
+[data-last-read="true"]::before {
+  content: "";
+  position: absolute;
+  inset: -4px -8px;
+  border-radius: 0.75rem;
+  background: hsl(var(--primary) / 0.1);
+  border: 2px solid hsl(var(--primary) / 0.3);
+  pointer-events: none;
+  animation: highlight-fade 3s ease-out forwards;
+}
+
+@keyframes highlight-fade {
+  0%, 60% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 /* Verse Numbers — Hidden by Default, Shown with show-verse-numbers Class */
 span.end {
   display: none;

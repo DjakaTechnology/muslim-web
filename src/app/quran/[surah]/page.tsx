@@ -6,6 +6,7 @@ import {
   type AyahData,
 } from "~/lib/quran-api";
 import { ReadingTracker } from "~/components/reading-tracker";
+import { SurahStickyHeader } from "~/components/surah-sticky-header";
 
 export const revalidate = 86400;
 
@@ -91,8 +92,13 @@ export default async function SurahPage({
   return (
     <main className="mx-auto max-w-2xl px-4 pb-20 pt-4">
       <ReadingTracker surahId={surahId} />
+      <SurahStickyHeader
+        surahName={surah.name_simple}
+        surahId={surahId}
+        totalAyahs={surah.verses_count}
+      />
 
-      {/* Back button */}
+      {/* Back button (visible before sticky header kicks in) */}
       <Link
         href="/quran"
         className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"

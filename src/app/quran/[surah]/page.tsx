@@ -19,6 +19,12 @@ function stripHtmlTags(html: string): string {
   return html.replace(/<[^>]*>/g, "");
 }
 
+function stripAyahNumbers(html: string): string {
+  // Remove ayah end markers like ﴿١﴾ ﴿٢٣﴾ etc. (Arabic-Indic digits inside ornate parentheses)
+  return html.replace(/\s*[\uFD3E\u06DD][\u0660-\u0669\u06F0-\u06F9]+[\uFD3F]?\s*/g, "")
+    .replace(/\s*<[^>]*>[\uFD3E\u06DD][\u0660-\u0669\u06F0-\u06F9]+[\uFD3F]?<\/[^>]*>\s*/g, "");
+}
+
 function AyahCard({ ayah }: { ayah: AyahData }) {
   return (
     <div id={`ayah-${ayah.verseNumber}`} className="group py-5">
@@ -34,7 +40,7 @@ function AyahCard({ ayah }: { ayah: AyahData }) {
             className="text-right font-quran text-2xl leading-[2.2] sm:text-3xl"
             dir="rtl"
             dangerouslySetInnerHTML={{
-              __html: ayah.textUthmaniTajweed,
+              __html: stripAyahNumbers(ayah.textUthmaniTajweed),
             }}
           />
 

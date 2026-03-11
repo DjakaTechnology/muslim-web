@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ChevronRight, Languages, Type, Bell, Info } from "lucide-react";
+import { ArrowLeft, BookOpen, ChevronRight, Globe, Languages, Type, Bell, Info } from "lucide-react";
 import { ThemeToggle } from "~/components/theme-toggle";
 
 export default function SettingsPage() {
@@ -57,6 +57,38 @@ export default function SettingsPage() {
               value="Off"
             />
           </div>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-sm font-medium text-muted-foreground uppercase tracking-wide">
+            Data Sources
+          </h2>
+          <div className="divide-y divide-border rounded-xl border border-border bg-card">
+            <a href="https://quran.com" target="_blank" rel="noopener noreferrer">
+              <SettingsRow
+                icon={<BookOpen className="size-5" />}
+                label="Quran Text & Tajweed"
+                value="Quran.com API v4"
+              />
+            </a>
+            <a href="https://quran.kemenag.go.id" target="_blank" rel="noopener noreferrer">
+              <SettingsRow
+                icon={<Languages className="size-5" />}
+                label="Indonesian Translation"
+                value="Kemenag RI"
+              />
+            </a>
+            <a href="https://tanzil.net" target="_blank" rel="noopener noreferrer">
+              <SettingsRow
+                icon={<Globe className="size-5" />}
+                label="Transliteration"
+                value="Tanzil.net"
+              />
+            </a>
+          </div>
+          <p className="mt-2 px-1 text-xs text-muted-foreground">
+            Al-Quran text uses the Uthmani script with tajweed markup. Translation provided by the Indonesian Ministry of Religious Affairs (Kemenag).
+          </p>
         </section>
 
         <section>

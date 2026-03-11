@@ -27,7 +27,7 @@ function stripAyahNumbers(html: string): string {
 
 function AyahCard({ ayah }: { ayah: AyahData }) {
   return (
-    <div id={`ayah-${ayah.verseNumber}`} className="group py-5">
+    <div id={`ayah-${ayah.verseNumber}`} className="group py-5 transition-colors duration-700 data-[last-read=true]:rounded-xl data-[last-read=true]:bg-primary/10 data-[last-read=true]:ring-2 data-[last-read=true]:ring-primary/30 data-[last-read=true]:px-2">
       <div className="flex gap-3">
         {/* Ayah number badge */}
         <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { saveReadingState, getReadingState } from "~/lib/reading-store";
 
 function getCurrentAyah(): number {
@@ -19,6 +19,7 @@ function getCurrentAyah(): number {
 
 export function ReadingTracker({ surahId }: { surahId: number }) {
   const savedRef = useRef(false);
+  const [lastAyah, setLastAyah] = useState<number | null>(null);
 
   const save = useCallback(() => {
     const ayah = getCurrentAyah();
@@ -26,10 +27,19 @@ export function ReadingTracker({ surahId }: { surahId: number }) {
   }, [surahId]);
 
   useEffect(() => {
-    // Restore scroll position on mount
+    // Restore scroll position and highlight last read ayah
     void getReadingState(surahId).then((state) => {
       if (state && !savedRef.current) {
-        window.scrollTo(0, state.lastScrollY);
+        setLastAyah(state.lastAyah);
+        // Scroll to last ayah element instead of raw scrollY for reliability
+        const el = document.getElementById(`ayah-${state.lastAyah}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "instant", block: "center" });
+        } else {
+          window.scrollTo(0, state.lastScrollY);
+        }
+        // Clear highlight after 3 seconds
+        setTimeout(() => setLastAyah(null), 3000);
       }
     });
 
@@ -58,6 +68,20 @@ export function ReadingTracker({ surahId }: { surahId: number }) {
       window.removeEventListener("beforeunload", onBeforeUnload);
     };
   }, [surahId, save]);
+
+  // Inject highlight styles for last-read ayah
+  useEffect(() => {
+    if (lastAyah === null) {
+      document.querySelectorAll("[data-last-read]").forEach((el) => {
+        el.removeAttribute("data-last-read");
+      });
+      return;
+    }
+    const el = document.getElementById(`ayah-${lastAyah}`);
+    if (el) {
+      el.setAttribute("data-last-read", "true");
+    }
+  }, [lastAyah]);
 
   return null;
 }
